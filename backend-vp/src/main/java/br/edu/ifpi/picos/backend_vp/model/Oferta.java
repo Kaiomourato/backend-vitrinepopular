@@ -32,7 +32,7 @@ public class Oferta {
     @Column(nullable = false)
     private StatusOferta status = StatusOferta.ATIVA;
 
-    // Relacionamentos (Chaves Estrangeiras)
+    // Relacionamentos 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
