@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "BackendVpApplication",
+            "request": "launch",
+            "mainClass": "br.edu.ifpi.picos.backend_vp.BackendVpApplication",
+            "projectName": "backend-vp"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-VitrinepopularApplication",
+            "request": "launch",
+            "mainClass": "br.edu.ifpi.picos.vitrinepopular.VitrinepopularApplication",
+            "projectName": "vitrinepopular",
+            "env": {
+                "SUPABASE_PASSWORD": "KMMoura555!"
+            }
+        }
+    ]
+}
