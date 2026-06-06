@@ -32,6 +32,12 @@ public class Oferta {
     @Column(nullable = false)
     private StatusOferta status = StatusOferta.ATIVA;
 
+    @Column(name = "votos_ainda_tem")
+    private Integer votosAindaTem = 0;
+
+    @Column(name = "votos_acabou")
+    private Integer votosAcabou = 0;
+
     // Relacionamentos 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -50,22 +56,37 @@ public class Oferta {
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
     public String getProdutoNome() { return produtoNome; }
     public void setProdutoNome(String produtoNome) { this.produtoNome = produtoNome; }
+
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }
+
     public String getImagemUrl() { return imagemUrl; }
     public void setImagemUrl(String imagemUrl) { this.imagemUrl = imagemUrl; }
+
     public LocalDateTime getDataPostagem() { return dataPostagem; }
     public void setDataPostagem(LocalDateTime dataPostagem) { this.dataPostagem = dataPostagem; }
+
     public Boolean getIsOficial() { return isOficial; }
     public void setIsOficial(Boolean isOficial) { this.isOficial = isOficial; }
+
     public StatusOferta getStatus() { return status; }
     public void setStatus(StatusOferta status) { this.status = status; }
+    
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
     public Loja getLoja() { return loja; }
     public void setLoja(Loja loja) { this.loja = loja; }
+
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+
+    public Integer getVotosAindaTem() { return votosAindaTem; }
+    public void setVotosAindaTem(Integer votosAindaTem) { this.votosAindaTem = votosAindaTem; }
+    
+    public Integer getVotosAcabou() { return votosAcabou; }
+    public void setVotosAcabou(Integer votosAcabou) { this.votosAcabou = votosAcabou; }
 }
