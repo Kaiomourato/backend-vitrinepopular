@@ -14,9 +14,10 @@ public class OfertaService {
     @Autowired
     private OfertaRepository ofertaRepository;
 
-    // Exclui oferta se tiver mais de 3 votos "Acabou"
+    
     private static final int LIMITE_VOTOS_ACABOU = 3;
 
+    // Exclui oferta se tiver mais de 3 votos "Acabou"
     public Oferta registrarVotoAcabou(Long idOferta) {
         Optional<Oferta> ofertaOpt = ofertaRepository.findById(idOferta);
         
@@ -32,5 +33,22 @@ public class OfertaService {
             return ofertaRepository.save(oferta);
         }
         throw new RuntimeException("Oferta não encontrada!");
+    }
+
+
+    // Verifica ofertas ativas a cada hora e expira as que foram postadas há mais de 48 horas
+    @org.springframework.scheduling.annotation.Scheduled(cron = "0 * * * * *")
+    public void verificarEExpirarOfertas() {
+
+        java.time.LocalDateTime tempoLimite = java.time.LocalDateTime.now().minusHours(48);
+        java.util.List<Oferta> ofertasExpiradas = ofertaRepository.findByStatusAndDataPostagemBefore(StatusOferta.ATIVA, tempoLimite);
+
+        if (!ofertasExpiradas.isEmpty()) {
+            for (Oferta oferta : ofertasExpiradas) {
+                oferta.setStatus(StatusOferta.EXPIRADA);
+            }
+            ofertaRepository.saveAll(ofertasExpiradas);
+            System.out.println("O Sistema expirou " + ofertasExpiradas.size() + " ofertas automaticamente!");
+        }
     }
 }
