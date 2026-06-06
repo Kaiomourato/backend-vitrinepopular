@@ -37,7 +37,7 @@ public class OfertaService {
 
 
     // Verifica ofertas ativas a cada hora e expira as que foram postadas há mais de 48 horas
-    @org.springframework.scheduling.annotation.Scheduled(cron = "0 * * * * *")
+    @org.springframework.scheduling.annotation.Scheduled(cron = "0 0* * * *")
     public void verificarEExpirarOfertas() {
 
         java.time.LocalDateTime tempoLimite = java.time.LocalDateTime.now().minusHours(48);
