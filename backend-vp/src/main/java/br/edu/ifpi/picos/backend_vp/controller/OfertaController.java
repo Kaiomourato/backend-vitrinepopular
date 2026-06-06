@@ -7,6 +7,7 @@ import br.edu.ifpi.picos.backend_vp.repository.OfertaRepository;
 import br.edu.ifpi.picos.backend_vp.service.OfertaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import br.edu.ifpi.picos.backend_vp.dto.OfertaRequestDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ public class OfertaController {
     }
 
     @PostMapping
-    public Oferta criarOferta(@RequestBody Oferta novaOferta) {
-        return ofertaRepository.save(novaOferta);
+    public OfertaResponseDTO criarOferta(@RequestBody OfertaRequestDTO dto) {
+        return ofertaService.criarOfertaSegura(dto);
     }
 
     @PatchMapping("/{id}/votar-acabou")
