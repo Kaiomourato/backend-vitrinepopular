@@ -31,6 +31,9 @@ public class OfertaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private ImagemService imagemService;
+
     
     private static final int LIMITE_VOTOS_ACABOU = 3;
 
@@ -71,28 +74,25 @@ public class OfertaService {
 
 
     // Criar Oferta
-    public OfertaResponseDTO criarOfertaSegura(OfertaRequestDTO dto) {
+    public OfertaResponseDTO criarOfertaSegura(OfertaRequestDTO dto, org.springframework.web.multipart.MultipartFile imagem) {
         
-        // Verifica ID
-        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-                
-        Loja loja = lojaRepository.findById(dto.lojaId())
-                .orElseThrow(() -> new RuntimeException("Loja não encontrada!"));
-                
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada!"));
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow();
+        Loja loja = lojaRepository.findById(dto.lojaId()).orElseThrow();
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow();
 
-        //Monta a oferta APENAS com os dados permitidos
+        // Faz o upload da foto e guarda a URL gerada!
+        String urlDaImagem = imagemService.fazerUpload(imagem);
+
         Oferta novaOferta = new Oferta();
         novaOferta.setProdutoNome(dto.produtoNome());
         novaOferta.setPreco(dto.preco());
-        novaOferta.setImagemUrl(dto.imagemUrl());
         novaOferta.setUsuario(usuario);
         novaOferta.setLoja(loja);
         novaOferta.setCategoria(categoria);
+        
+        // Atribui o link devolvido pelo Cloudinary
+        novaOferta.setImagemUrl(urlDaImagem); 
 
-        // Salva no banco e já devolve filtrado no formato ResponseDTO
         Oferta salva = ofertaRepository.save(novaOferta);
         return OfertaResponseDTO.fromEntity(salva);
     }

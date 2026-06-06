@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 public record OfertaRequestDTO(
         String produtoNome,
         BigDecimal preco,
-        String imagemUrl,
         Long usuarioId,
         Long lojaId,
         Long categoriaId

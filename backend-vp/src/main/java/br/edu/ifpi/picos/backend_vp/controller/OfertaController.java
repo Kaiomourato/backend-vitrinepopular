@@ -32,9 +32,20 @@ public class OfertaController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping
-    public OfertaResponseDTO criarOferta(@RequestBody OfertaRequestDTO dto) {
-        return ofertaService.criarOfertaSegura(dto);
+    @PostMapping(consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public OfertaResponseDTO criarOferta(
+            @RequestParam("dados") String dadosJson,
+            @RequestParam("imagem") org.springframework.web.multipart.MultipartFile imagem) {
+            
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            OfertaRequestDTO dto = objectMapper.readValue(dadosJson, OfertaRequestDTO.class);
+            
+            return ofertaService.criarOfertaSegura(dto, imagem);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao ler os dados da oferta: " + e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/votar-acabou")
