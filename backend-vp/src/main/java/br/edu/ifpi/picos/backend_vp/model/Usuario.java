@@ -17,6 +17,9 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String senha;
+
     @Column(name = "google_id", unique = true)
     private String googleId;
 
@@ -28,7 +31,7 @@ public class Usuario {
 
     private String nivel;
 
-    // Construtor vazio (obrigatório para o Spring)
+    
     public Usuario() {
     }
 
@@ -39,6 +42,8 @@ public class Usuario {
     public void setNome(String nome) { this.nome = nome; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
     public String getGoogleId() { return googleId; }
     public void setGoogleId(String googleId) { this.googleId = googleId; }
     public PerfilUsuario getPerfil() { return perfil; }
