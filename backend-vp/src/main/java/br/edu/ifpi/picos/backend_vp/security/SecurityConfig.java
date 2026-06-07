@@ -35,28 +35,28 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(req -> {
 
-                    // ── ROTAS TOTALMENTE PÚBLICAS ─────────────────────────────
+                    // ── SWAGGER — todos os paths que o SpringDoc registra ─────
+                    // Spring Boot 4 + SpringDoc 2.x precisam de cada um explícito
+                    req.requestMatchers(
+                        "/v3/api-docs",
+                        "/v3/api-docs/**",
+                        "/v3/api-docs.yaml",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/webjars/**"
+                    ).permitAll();
+
+                    // ── ROTAS PÚBLICAS DA API ─────────────────────────────────
                     req.requestMatchers(HttpMethod.POST, "/api/usuarios/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/api/usuarios/registrar").permitAll();
 
-                    // Feed público: qualquer um pode navegar sem conta
                     req.requestMatchers(HttpMethod.GET, "/api/ofertas/**").permitAll();
-
-                    // [CORREÇÃO] GET /lojas ainda é público (ver lojas é livre),
-                    // mas POST /lojas agora exige autenticação (qualquer um não pode criar loja)
                     req.requestMatchers(HttpMethod.GET, "/api/lojas/**").permitAll();
-
                     req.requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll();
 
-                    // Swagger público para facilitar testes
-                    req.requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll();
-
-                    // ── TODAS AS OUTRAS ROTAS EXIGEM TOKEN JWT ────────────────
-                    // Isso inclui automaticamente:
-                    //   POST /api/lojas         (criar loja)
-                    //   GET  /api/usuarios/me   (perfil do usuário logado)
-                    //   POST /api/ofertas       (criar oferta)
-                    //   PATCH/DELETE /api/ofertas/{id}  (editar/remover oferta)
+                    // ── TUDO O MAIS EXIGE TOKEN JWT ───────────────────────────
                     req.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
