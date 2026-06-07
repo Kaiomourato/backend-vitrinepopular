@@ -1,5 +1,6 @@
 package br.edu.ifpi.picos.backend_vp.dto;
 
+import br.edu.ifpi.picos.backend_vp.model.enums.PerfilUsuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,5 +14,9 @@ public record UsuarioRequestDTO(
         String email,
         
         @NotBlank(message = "A senha é obrigatória!")
-        String senha
+        String senha,
+
+        PerfilUsuario perfil,
+        Long lojaId,
+        String pinLoja
 ) {}

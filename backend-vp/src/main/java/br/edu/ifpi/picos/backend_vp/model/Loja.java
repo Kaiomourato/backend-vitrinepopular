@@ -20,6 +20,9 @@ public class Loja {
     @Column(name = "is_parceira")
     private Boolean isParceira = false;
 
+    @Column(nullable = false, length = 10)
+    private String pin;
+
     // Relacionamento: Várias lojas podem ter o mesmo dono (se ele tiver filiais)
     @ManyToOne
     @JoinColumn(name = "dono_id")
@@ -40,4 +43,6 @@ public class Loja {
     public void setIsParceira(Boolean isParceira) { this.isParceira = isParceira; }
     public Usuario getDono() { return dono; }
     public void setDono(Usuario dono) { this.dono = dono; }
+    public String getPin() { return pin; }
+    public void setPin(String pin) { this.pin = pin; }
 }

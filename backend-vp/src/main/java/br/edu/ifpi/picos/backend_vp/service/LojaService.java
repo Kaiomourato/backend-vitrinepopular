@@ -21,6 +21,9 @@ public class LojaService {
         novaLoja.setNome(dto.nome());
         novaLoja.setEndereco(dto.endereco());
         
+        String pinAleatorio = java.util.UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        novaLoja.setPin("VP-" + pinAleatorio); // Ex: VP-A83F92
+        
         Loja lojaSalva = lojaRepository.save(novaLoja);
         return LojaResponseDTO.fromEntity(lojaSalva);
     }
