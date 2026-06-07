@@ -13,6 +13,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import jakarta.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/ofertas")
 @CrossOrigin(origins = "*")
@@ -23,6 +27,9 @@ public class OfertaController {
 
     @Autowired
     private OfertaService ofertaService;
+
+    @Autowired
+    private Validator validator;
 
     @GetMapping
     public Page<OfertaResponseDTO> listarOfertasAtivas(
@@ -43,10 +50,16 @@ public class OfertaController {
             com.fasterxml.jackson.databind.ObjectMapper objectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
             OfertaRequestDTO dto = objectMapper.readValue(dadosJson, OfertaRequestDTO.class);
             
+            Set<ConstraintViolation<OfertaRequestDTO>> erros = validator.validate(dto);
+            if (!erros.isEmpty()) {
+                String mensagemErro = erros.iterator().next().getMessage();
+                throw new IllegalArgumentException(mensagemErro);
+            }
+
             return ofertaService.criarOfertaSegura(dto, imagem);
             
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao ler os dados da oferta: " + e.getMessage());
+            throw new RuntimeException("Erro: " + e.getMessage());
         }
     }
 
