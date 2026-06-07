@@ -96,4 +96,10 @@ public class OfertaService {
         Oferta salva = ofertaRepository.save(novaOferta);
         return OfertaResponseDTO.fromEntity(salva);
     }
+
+    public OfertaResponseDTO buscarPorId(Long id) {
+        Oferta oferta = ofertaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Erro: Oferta não encontrada no sistema!"));
+        return OfertaResponseDTO.fromEntity(oferta);
+    }
 }

@@ -67,4 +67,22 @@ public class OfertaController {
     public Oferta votarAcabou(@PathVariable Long id) {
         return ofertaService.registrarVotoAcabou(id);
     }
+
+    @GetMapping("/{id}")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Detalhes da Oferta", description = "Busca uma oferta específica pelo seu ID")
+    public OfertaResponseDTO buscarOfertaPorId(@PathVariable Long id) {
+        return ofertaService.buscarPorId(id);
+    }
+
+    @GetMapping("/categoria/{categoriaId}")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Filtrar por Categoria", description = "Lista as ofertas ativas de uma categoria específica (com paginação)")
+    public Page<OfertaResponseDTO> listarOfertasPorCategoria(
+            @PathVariable Long categoriaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable paginacao = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Oferta> ofertasPage = ofertaRepository.findByCategoriaIdAndStatus(categoriaId, StatusOferta.ATIVA, paginacao);
+        return ofertasPage.map(OfertaResponseDTO::fromEntity);
+    }
 }

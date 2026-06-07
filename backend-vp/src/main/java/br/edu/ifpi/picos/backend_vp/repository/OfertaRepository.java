@@ -19,4 +19,7 @@ public interface OfertaRepository extends JpaRepository<Oferta, Long> {
 
     //Busca ofertas por status e data de postagem anterior a um limite
     List<Oferta> findByStatusAndDataPostagemBefore(StatusOferta status, LocalDateTime dataLimite);
+
+    // Busca ofertas de uma categoria específica, filtrando pelo status e com paginação
+    Page<Oferta> findByCategoriaIdAndStatus(Long categoriaId, StatusOferta status, Pageable pageable);
 }
