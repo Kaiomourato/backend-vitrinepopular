@@ -13,13 +13,20 @@ import java.util.List;
 
 @Repository
 public interface OfertaRepository extends JpaRepository<Oferta, Long> {
-    
-    // Busca todas as ofertas filtrando pelo status
+
+    // Feed principal — filtra por status
     Page<Oferta> findByStatus(StatusOferta status, Pageable pageable);
 
-    //Busca ofertas por status e data de postagem anterior a um limite
+    // Job de expiração — busca ativas postadas antes de um limite de tempo
     List<Oferta> findByStatusAndDataPostagemBefore(StatusOferta status, LocalDateTime dataLimite);
 
-    // Busca ofertas de uma categoria específica, filtrando pelo status e com paginação
+    // Filtro por categoria (já existia)
     Page<Oferta> findByCategoriaIdAndStatus(Long categoriaId, StatusOferta status, Pageable pageable);
+
+    // [NOVO] Filtro por loja — para a "página da loja" no frontend
+    Page<Oferta> findByLojaIdAndStatus(Long lojaId, StatusOferta status, Pageable pageable);
+
+    // [NOVO] Busca por texto no nome do produto — para a barra de busca
+    // Spring Data JPA gera o SQL automaticamente a partir do nome do método
+    Page<Oferta> findByProdutoNomeContainingIgnoreCaseAndStatus(String texto, StatusOferta status, Pageable pageable);
 }

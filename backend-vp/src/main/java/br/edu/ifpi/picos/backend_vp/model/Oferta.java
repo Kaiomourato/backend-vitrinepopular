@@ -13,8 +13,13 @@ public class Oferta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "produto_nome", nullable = false)
+    @Column(name = "produto_nome", nullable = false, length = 100)
     private String produtoNome;
+
+    // [NOVO] Campo de descrição livre para o lojista detalhar a promoção,
+    // condições, prazo de validade etc.
+    @Column(columnDefinition = "TEXT")
+    private String descricao;
 
     @Column(nullable = false)
     private BigDecimal preco;
@@ -38,7 +43,6 @@ public class Oferta {
     @Column(name = "votos_acabou")
     private Integer votosAcabou = 0;
 
-    // Relacionamentos 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
@@ -60,6 +64,10 @@ public class Oferta {
     public String getProdutoNome() { return produtoNome; }
     public void setProdutoNome(String produtoNome) { this.produtoNome = produtoNome; }
 
+    // [NOVO] Getter e Setter para descricao
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }
 
@@ -74,7 +82,7 @@ public class Oferta {
 
     public StatusOferta getStatus() { return status; }
     public void setStatus(StatusOferta status) { this.status = status; }
-    
+
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
@@ -86,7 +94,7 @@ public class Oferta {
 
     public Integer getVotosAindaTem() { return votosAindaTem; }
     public void setVotosAindaTem(Integer votosAindaTem) { this.votosAindaTem = votosAindaTem; }
-    
+
     public Integer getVotosAcabou() { return votosAcabou; }
     public void setVotosAcabou(Integer votosAcabou) { this.votosAcabou = votosAcabou; }
 }
