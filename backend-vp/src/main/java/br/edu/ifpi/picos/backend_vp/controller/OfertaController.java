@@ -8,9 +8,10 @@ import br.edu.ifpi.picos.backend_vp.service.OfertaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import br.edu.ifpi.picos.backend_vp.dto.OfertaRequestDTO;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @RestController
 @RequestMapping("/api/ofertas")
@@ -24,12 +25,13 @@ public class OfertaController {
     private OfertaService ofertaService;
 
     @GetMapping
-    public List<OfertaResponseDTO> listarOfertasAtivas() {
-        List<Oferta> ofertas = ofertaRepository.findByStatus(StatusOferta.ATIVA);
-        
-        return ofertas.stream()
-                .map(OfertaResponseDTO::fromEntity)
-                .collect(Collectors.toList());
+    public Page<OfertaResponseDTO> listarOfertasAtivas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable paginacao = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        Page<Oferta> ofertasPage = ofertaRepository.findByStatus(StatusOferta.ATIVA, paginacao);
+        return ofertasPage.map(OfertaResponseDTO::fromEntity);
     }
 
     @PostMapping(consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
