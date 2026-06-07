@@ -76,21 +76,39 @@ public class OfertaService {
     // Criar Oferta
     public OfertaResponseDTO criarOfertaSegura(OfertaRequestDTO dto, org.springframework.web.multipart.MultipartFile imagem) {
         
-        Usuario usuario = usuarioRepository.findById(dto.usuarioId()).orElseThrow();
-        Loja loja = lojaRepository.findById(dto.lojaId()).orElseThrow();
-        Categoria categoria = categoriaRepository.findById(dto.categoriaId()).orElseThrow();
+        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
+                .orElseThrow(() -> new RuntimeException("Erro: Usuário publicador não encontrado!"));
+        
 
-        // Faz o upload da foto e guarda a URL gerada!
+        if (usuario.getPerfil() == br.edu.ifpi.picos.backend_vp.model.enums.PerfilUsuario.LOJISTA) {
+            
+            
+            if (dto.lojaId() == null) {
+                throw new RuntimeException("Erro de Negócio: Um Lojista precisa obrigatoriamente associar a oferta à sua própria loja!");
+            }
+            
+            
+            if (usuario.getLoja() == null || !usuario.getLoja().getId().equals(dto.lojaId())) {
+                throw new RuntimeException("Erro de Segurança: Um Lojista não tem permissão para publicar ofertas em nome de outra loja!");
+            }
+        }
+
+
+        Loja loja = lojaRepository.findById(dto.lojaId())
+                .orElseThrow(() -> new RuntimeException("Erro: Loja não encontrada com o ID informado!"));
+        Categoria categoria = categoriaRepository.findById(dto.categoriaId())
+                .orElseThrow(() -> new RuntimeException("Erro: Categoria não encontrada com o ID informado!"));
+
+       
         String urlDaImagem = imagemService.fazerUpload(imagem);
 
+  
         Oferta novaOferta = new Oferta();
         novaOferta.setProdutoNome(dto.produtoNome());
         novaOferta.setPreco(dto.preco());
         novaOferta.setUsuario(usuario);
         novaOferta.setLoja(loja);
         novaOferta.setCategoria(categoria);
-        
-        // Atribui o link devolvido pelo Cloudinary
         novaOferta.setImagemUrl(urlDaImagem); 
 
         Oferta salva = ofertaRepository.save(novaOferta);

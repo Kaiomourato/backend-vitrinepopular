@@ -26,8 +26,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Fazer Login", description = "Valida as credenciais e retorna os dados do perfil")
-    public UsuarioResponseDTO login(@Valid @RequestBody UsuarioLoginDTO dto) {
+    @io.swagger.v3.oas.annotations.Operation(summary = "Fazer Login", description = "Autentica o utilizador e devolve o Token JWT")
+    public br.edu.ifpi.picos.backend_vp.dto.LoginResponseDTO login(@RequestBody @jakarta.validation.Valid br.edu.ifpi.picos.backend_vp.dto.UsuarioLoginDTO dto) {
         return usuarioService.login(dto);
     }
 

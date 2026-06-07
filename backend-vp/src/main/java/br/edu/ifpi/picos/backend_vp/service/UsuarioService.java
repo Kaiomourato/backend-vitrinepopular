@@ -8,6 +8,8 @@ import br.edu.ifpi.picos.backend_vp.model.Usuario;
 import br.edu.ifpi.picos.backend_vp.model.enums.PerfilUsuario;
 import br.edu.ifpi.picos.backend_vp.repository.LojaRepository;
 import br.edu.ifpi.picos.backend_vp.repository.UsuarioRepository;
+import br.edu.ifpi.picos.backend_vp.security.TokenService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class UsuarioService {
 
     @Autowired
     private LojaRepository lojaRepository;
+
+    @Autowired
+    private TokenService tokenService;
 
     public UsuarioResponseDTO registrar(UsuarioRequestDTO dto) {
         Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(dto.email());
@@ -66,7 +71,7 @@ public class UsuarioService {
         return UsuarioResponseDTO.fromEntity(usuarioSalvo);
     }
 
-    public UsuarioResponseDTO login(UsuarioLoginDTO dto) {
+    public br.edu.ifpi.picos.backend_vp.dto.LoginResponseDTO login(UsuarioLoginDTO dto) {
         Usuario usuario = usuarioRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new RuntimeException("Erro: Utilizador não encontrado!"));
 
@@ -74,7 +79,12 @@ public class UsuarioService {
             throw new RuntimeException("Erro: Senha incorreta!");
         }
 
-        return UsuarioResponseDTO.fromEntity(usuario);
+        String tokenJwt = tokenService.gerarToken(usuario);
+
+        return new br.edu.ifpi.picos.backend_vp.dto.LoginResponseDTO(
+                UsuarioResponseDTO.fromEntity(usuario), 
+                tokenJwt
+        );
     }
 
     public UsuarioResponseDTO buscarPorId(Long id) {
